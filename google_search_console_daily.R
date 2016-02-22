@@ -9,30 +9,34 @@
 library(googleAuthR)
 library(searchConsoleR)
 
+## Authorize script with Search Console.  
+## Add path to your Google Developer Console Service Account secret.json file
+service_token <-gar_auth_service("C:/Users/praskry/Documents/r_search_console_secret.json")
 
 ## data is in search console reliable for 3 days ago so set that to start date = today - 3
-## this is a single day pull so end to start
+## this is a single day pull so set end to start
 start <- Sys.Date() - 3
 end <- start
 
 ## set website to your URL including http://
 website <- "http://www.ryanpraski.com"
 
-## Authorize script with Search Console.  
-## First time you will need to login to Google,
-## but should auto-refresh after that so can be put in 
-## Authorize script with an account that has access to website.
-gar_auth()
 
-## first time stop here and wait for authorization
+## what to download, choose between data, query, page, device, country
+download_dimensions <- c('date','query')
+
+## what type of Google search, choose between 'web', 'video' or 'image'
+type <- c('web')
+
+## other options available, check out ?search_analytics in the R console
 
 ## this is the query to the search console API
 
 searchquery <- search_analytics(siteURL = website,
                                 startDate = start, 
                                 endDate = end, 
-                                dimensions = c('date','page','query'),
-                                searchType = c('web'), 
+                                dimensions = download_dimensions,
+                                searchType = type, 
                                 rowLimit = 5000)
 
 
@@ -40,7 +44,7 @@ searchquery <- search_analytics(siteURL = website,
 ## Specify Output filepath
 filepath <-"C:/Users/praskry/Desktop/rdata/"
 
-## filename will be set like searchconsoledata_2015-11-13_to_2016-02-08 (.csv will be added in next step)
+## filename will be set like searchconsoledata_2016-02-08 (.csv will be added in next step)
 filename <- paste("searchconsoledata", start, sep = "_")
 
 ## the is the full filepath + filename with .csv
