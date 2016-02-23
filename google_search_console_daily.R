@@ -1,6 +1,6 @@
 ## A script to download and archive Google search console analytics (formerly webmaster tools)
 ##
-## searchConsoleR R package created by Mark Edmondson (http://markedmondson.me)
+## searchConsoleR package created by Mark Edmondson (http://markedmondson.me)
 ##
 ## This script downloads and writes data to .csv for the most recent day of search console data (3 days ago)
 
@@ -9,18 +9,17 @@
 library(googleAuthR)
 library(searchConsoleR)
 
-## Authorize script with Search Console.  
+## Authorize script with Google Developer Console.  
 ## Add path to your Google Developer Console Service Account secret.json file
 service_token <-gar_auth_service("C:/Users/praskry/Documents/r_search_console_secret.json")
 
-## data is in search console reliable for 3 days ago so set that to start date = today - 3
-## this is a single day pull so set end to start
+## data in search console is reliable for 3 days ago so set start date = today - 3
+## this is a single day pull so set end = start
 start <- Sys.Date() - 3
 end <- start
 
 ## set website to your URL including http://
 website <- "http://www.ryanpraski.com"
-
 
 ## what to download, choose between data, query, page, device, country
 download_dimensions <- c('date','query')
@@ -31,6 +30,7 @@ type <- c('web')
 ## other options available, check out ?search_analytics in the R console
 
 ## this is the query to the search console API
+## rowLimit = 5000 is the max
 
 searchquery <- search_analytics(siteURL = website,
                                 startDate = start, 
@@ -50,7 +50,7 @@ filename <- paste("searchconsoledata", start, sep = "_")
 ## the is the full filepath + filename with .csv
 output <- paste(filepath, filename, ".csv", sep = "")
 
-## this writes the sorted search query report to full filepath and filename row.names=FALSE does not write row numbers to the 
+## this writes the sorted search query report to full filepath and filename row.names=FALSE does not write dataframe row numbers
 write.csv(searchquery, output, row.names = FALSE)
 
 ## Complete
